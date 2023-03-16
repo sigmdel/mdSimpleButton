@@ -6,14 +6,17 @@
 #include <Arduino.h>
 #include "mdSimpleButton.h"
 
-#define VERSION 0x000100  // 0.1.0
+#define VERSION 0x000200  // 0.2.0
 
-mdSimpleButton::mdSimpleButton(uint8_t pin, bool activeLow, bool useInternalPullResistor, buttonCallback callback) {
+mdSimpleButton::mdSimpleButton(uint8_t pin, bool activeLow, bool useInternalPullResistor, buttonCallback cb) {
   Serial.println("Constructor");
   _pin = pin;
   _restState = activeLow;
   _active = false;
-  _onEvent = callback;
+  _onEvent = cb;
+  _debouncing = false;
+  debounce = DEBOUNCE_TIME; 
+  longpress = LONGPRESS_TIME; 
 
   int mode = INPUT;
   if (useInternalPullResistor) {
@@ -29,7 +32,11 @@ mdSimpleButton::mdSimpleButton(uint8_t pin, bool activeLow, bool useInternalPull
     }
   }
   pinMode(_pin, mode);
-  version = VERSION;
+  _version = VERSION;
+}
+
+int32_t mdSimpleButton::version(void) {
+  return _version;
 }
 
 void mdSimpleButton::onButtonEvent(buttonCallback cb) {
@@ -37,15 +44,25 @@ void mdSimpleButton::onButtonEvent(buttonCallback cb) {
 }
 
 buttonEvent mdSimpleButton::update(void) {
+  if (_debouncing) {
+    if (millis() - _timer < debounce)
+      return BUTTON_UNCHANGED;
+    else  
+      _debouncing = false;
+  }
   if ((digitalRead(_pin) != _restState) && (!_active)) {
     _active = true;
-    if (_onEvent) _onEvent(BUTTON_PRESSED);
+    _debouncing = true;
+    _timer = millis();
+    if (_onEvent) _onEvent(this, BUTTON_PRESSED);
     return BUTTON_PRESSED;
   }
   if ((digitalRead(_pin) == _restState) && (_active)) {
     _active = false;
-    if (_onEvent) _onEvent(BUTTON_RELEASED);
-    return BUTTON_RELEASED;
+    presstime = (millis() - _timer);
+    buttonEvent event = (presstime < longpress) ? BUTTON_RELEASED : BUTTON_LONGPRESS;
+    if (_onEvent) _onEvent(this, event);
+    return event;
   }
   return BUTTON_UNCHANGED;
 }

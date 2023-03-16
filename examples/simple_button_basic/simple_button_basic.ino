@@ -11,7 +11,6 @@
 #include <Arduino.h>           // for PlatformIO
 #include "mdSimpleButton.h"
 
-
 #define SERIAL_BAUD 9600
 #define BUTTON_PIN 3  
 #define ACTIVE LOW
@@ -53,10 +52,18 @@
 
 void setup() {
   Serial.begin(SERIAL_BAUD);
-  delay(2000);
+  delay(10000);
   #if defined(ESP8266)
     Serial.println("\n"); // skip boot garbage
   #endif   
+
+  Serial.print("mdSimpleButton library version ");
+  Serial.print(button.version() >> 16);
+  Serial.print(".");
+  Serial.print( (button.version() & 0x00FF00) >> 8);
+  Serial.print(".");
+  Serial.println( (button.version() & 0x0000FF));
+      
   Serial.println("setup() completed.");
 }
 
@@ -73,13 +80,23 @@ void loop() {
     case BUTTON_PRESSED:  
       pressedCount++;
       countsChanged = true;
-      Serial.println("Button pressed"); 
+      Serial.println("\nButton pressed"); 
       break;
      
     case BUTTON_RELEASED:
       releasedCount++;
       countsChanged = true;
-      Serial.println("Button released"); 
+      Serial.print("Button released after "); 
+      Serial.print(button.presstime);
+      Serial.println(" ms");
+      break;   
+     
+    case BUTTON_LONGPRESS:
+      releasedCount++;
+      countsChanged = true;
+      Serial.print("Button released after long press of "); 
+      Serial.print(button.presstime);
+      Serial.println(" ms");
       break;
      
     default: 
@@ -90,9 +107,9 @@ void loop() {
 
   if (countsChanged) {
     countsChanged = false;
-    Serial.print("pressedCount = ");
+    Serial.print("  pressedCount = ");
     Serial.println(pressedCount);
-    Serial.print("releasedCount = ");
+    Serial.print("  releasedCount = ");
     Serial.println(releasedCount);
   }
 }
