@@ -78,6 +78,11 @@ The second example, `simple_button_callback.ino` is similar but uses a
 callback function which will never have to handle a `BUTTON_UNCHANGED` event. 
 Note that `update()` is still called in the `loop()` function. 
 
+# Architecture and Testing
+
+The library should work with most microcontrollers with an Arduino core. However it has only been tested 
+with the ESP32-C3 in Arduino-ESP32.
+
 # Credits
 
 Based on [MicroPython-Button](https://github.com/ubidefeo/MicroPython-Button) by Ubi de Feo (ubidefeo)
