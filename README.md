@@ -128,7 +128,7 @@ The callback function can handle more than one button because a pointer to the `
       ... 
     } else if (button->pin() == 8) {
       // handle button on I/O pin 8
-      if ( (event == BUTTON_LONGPRESS) && (button->.presstime > 5000) ) {
+      if ( (event == BUTTON_LONGPRESS) && (button->presstime > 5000) ) {
         Serial.println("Really long button press!");        
   ...    
 ```
