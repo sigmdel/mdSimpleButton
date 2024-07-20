@@ -1,6 +1,6 @@
 # mdSimpleButton Library
 
-**Version 0.2.0** (March 16, 2023)
+**Version 0.2.1** (July 20, 2024)
 
 An [Arduino](https://www.arduino.cc/) library that returns changes in the state of an on/off button.
 
@@ -157,6 +157,13 @@ with the ESP32-C3 in Arduino-ESP32. Furthermore it has only been tested with two
 
 Based on [MicroPython-Button](https://github.com/ubidefeo/MicroPython-Button) by Ubi de Feo (ubidefeo)
 
+# Change Log
+
+July 20, 2024 (Version 0.2.1)
+  - removed Serial.print() statement in constructor that could interfere with Serial.available().
+
+March 16, 2023 (Version 0.2.0)
+  - first public commit
 
 # Licence
 

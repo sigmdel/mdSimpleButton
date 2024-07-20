@@ -6,10 +6,9 @@
 #include <Arduino.h>
 #include "mdSimpleButton.h"
 
-#define VERSION 0x000200  // 0.2.0
+#define VERSION 0x000201  // 0.2.1
 
 mdSimpleButton::mdSimpleButton(uint8_t pin, bool activeLow, bool useInternalPullResistor, buttonCallback cb) {
-  Serial.println("Constructor");
   _pin = pin;
   _restState = activeLow;
   _active = false;
