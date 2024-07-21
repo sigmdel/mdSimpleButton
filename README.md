@@ -160,7 +160,7 @@ Based on [MicroPython-Button](https://github.com/ubidefeo/MicroPython-Button) by
 # Change Log
 
 July 20, 2024 (Version 0.2.1)
-  - removed Serial.print() statement in constructor that could interfere with Serial.available().
+  - removed Serial.print() in the constructor which could interfere if the serial port is not open.
 
 March 16, 2023 (Version 0.2.0)
   - first public commit
